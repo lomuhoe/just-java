@@ -21,15 +21,14 @@ class ClockThread extends Thread {
 
         while (true) {
             calendar = Calendar.getInstance();
-            temp = calendar.get(Calendar.HOUR) + " : " +calendar.get(Calendar.MINUTE) + " : " + 
-            calendar.get(Calendar.SECOND);
-            target.setText(temp);
-
+            temp = String.format("%02d : %02d : %02d : %02d", calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE),
+            calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND)/10);
             try {
-                sleep(100);
+                sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            target.setText(temp);
         }
     }
 }
@@ -44,12 +43,21 @@ class CountThread extends Thread {
 
     @Override
     public void run() {
-        super.run();
+        int num = 0;
+        
+        while (true) {
+            try {
+                sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            target.setText(Integer.toString(num++));
+        }
     }
 }
 
 class SwingThread extends JFrame{ // JFrame 이라는 창이 열림
-    JTextField jtf1, jtf2, jtf3;
+    JTextField jtf1, jtf2, jtf3, jtf4;
 
     SwingThread(){
         super("스레드 연습"); // JFrame의 제목에 적힘
@@ -63,6 +71,8 @@ class SwingThread extends JFrame{ // JFrame 이라는 창이 열림
         jtf2 = new JTextField("테스트", 40); add(jtf2);
         jtf3 = new JTextField(20); add(jtf3);
         new ClockThread(jtf3).start();
+        jtf4 = new JTextField(20); add(jtf4);
+        new CountThread(jtf4).start();
         
 
         setVisible(true);
